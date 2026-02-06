@@ -3,211 +3,192 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Clinic System - @BahezKhalidAudl</title>
+    <title>Clinic System - Secure Admin</title>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Arabic:wght@400;700&display=swap" rel="stylesheet">
     <style>
-        :root {
-            --primary: #0284c7; --bg: #fdfdfd; --card: #ffffff;
-            --text: #1e293b; --border: #e2e8f0; --price-bg: #f0f9ff;
-        }
-        [data-theme='dark'] {
-            --bg: #0f172a; --card: #1e293b; --text: #f8fafc; --border: #334155; --price-bg: #0c4a6e;
-        }
+        :root { --primary: #0284c7; --bg: #fdfdfd; --card: #ffffff; --text: #1e293b; --border: #e2e8f0; --price-bg: #f0f9ff; }
+        [data-theme='dark'] { --bg: #0f172a; --card: #1e293b; --text: #f8fafc; --border: #334155; --price-bg: #0c4a6e; }
         * { box-sizing: border-box; font-family: 'Noto Sans Arabic', sans-serif; transition: 0.2s; }
         body { background: var(--bg); color: var(--text); margin: 0; padding: 10px; padding-bottom: 100px; }
-
-        header {
-            display: flex; justify-content: space-between; align-items: center;
-            padding: 10px; background: var(--card); border: 1px solid var(--border);
-            border-radius: 10px; margin-bottom: 15px;
-        }
+        
+        header { display: flex; justify-content: space-between; align-items: center; padding: 10px; background: var(--card); border: 1px solid var(--border); border-radius: 10px; margin-bottom: 15px; }
         .lang-btns button { border: 1px solid var(--border); background: var(--card); padding: 4px 8px; border-radius: 5px; cursor: pointer; font-size: 0.7rem; color: var(--text); margin: 0 2px; }
+        
+        /* Admin Search Bar */
+        .search-wrapper { margin-bottom: 15px; }
+        .search-input { width: 100%; padding: 12px; border: 1px solid var(--border); border-radius: 8px; background: var(--card); color: var(--text); outline: none; }
 
         .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(105px, 1fr)); gap: 10px; margin-bottom: 20px; }
-        .card {
-            background: var(--card); border: 1px solid var(--border); border-radius: 10px;
-            padding: 12px 5px; text-align: center; cursor: pointer; display: flex; flex-direction: column; justify-content: space-between;
-            min-height: 110px;
-        }
+        .card { background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 12px 5px; text-align: center; cursor: pointer; display: flex; flex-direction: column; justify-content: space-between; min-height: 110px; }
         .card:hover { border-color: var(--primary); transform: translateY(-2px); }
-        .card h3 { font-size: 0.85rem; margin: 0 0 3px 0; color: var(--text); }
-        .card p { font-size: 0.65rem; color: #94a3b8; margin: 0 0 10px 0; }
+        .card h3 { font-size: 0.85rem; margin: 0; }
         
-        .price-tag { background: var(--price-bg); color: var(--primary); font-size: 0.7rem; font-weight: bold; padding: 4px 0; border-radius: 6px; }
-
+        .price-tag { background: var(--price-bg); color: var(--primary); font-size: 0.7rem; font-weight: bold; padding: 4px 0; border-radius: 6px; margin-top: 5px; }
         .table-section { background: var(--card); border: 1px solid var(--border); border-radius: 10px; overflow-x: auto; }
         table { width: 100%; border-collapse: collapse; font-size: 0.7rem; min-width: 500px; }
-        th { background: #f8fafc; color: #64748b; padding: 10px; text-align: inherit; border-bottom: 1px solid var(--border); }
-        [data-theme='dark'] th { background: #1e293b; }
-        td { padding: 10px; border-bottom: 1px solid var(--border); }
+        th, td { padding: 10px; border-bottom: 1px solid var(--border); text-align: inherit; }
 
-        .tkt { background: #f1f5f9; border: 1px solid var(--border); padding: 2px 5px; border-radius: 4px; font-weight: bold; }
-
-        footer { margin-top: 30px; text-align: center; padding: 20px; font-size: 0.8rem; color: #94a3b8; border-top: 1px solid var(--border); }
-        .signature { color: var(--primary); font-weight: bold; }
-
-        #modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.4); display: none; align-items: center; justify-content: center; z-index: 1000; }
+        #loginOverlay { position: fixed; inset: 0; background: var(--bg); display: flex; align-items: center; justify-content: center; z-index: 2000; }
+        .hidden { display: none !important; }
+        .btn-confirm { background: var(--primary); color: white; border: none; padding: 10px; width: 100%; border-radius: 8px; cursor: pointer; font-weight: bold; }
+        #modal { position: fixed; inset: 0; background: rgba(0,0,0,0.4); display: none; align-items: center; justify-content: center; z-index: 1000; }
         .modal-box { background: var(--card); border: 1px solid var(--border); padding: 20px; border-radius: 15px; width: 300px; }
-        input { width: 100%; padding: 10px; margin: 6px 0; border: 1px solid var(--border); border-radius: 8px; outline: none; background: var(--bg); color: var(--text); font-size: 0.8rem;}
-        .btn-confirm { background: var(--primary); color: white; border: none; padding: 10px; width: 100%; border-radius: 8px; cursor: pointer; font-weight: bold; margin-top: 5px;}
-
-        .ltr { direction: ltr; } .rtl { direction: rtl; }
+        input { width: 100%; padding: 10px; margin: 6px 0; border: 1px solid var(--border); border-radius: 8px; background: var(--bg); color: var(--text); }
     </style>
 </head>
 <body class="rtl">
 
+    <div id="loginOverlay">
+        <div class="modal-box" style="text-align: center;">
+            <h3 id="welcomeMsg">Welcome / أهلاً بكم</h3>
+            <button class="btn-confirm" onclick="checkAdmin()">Admin (Login)</button>
+            <button class="btn-confirm" onclick="login('guest')" style="background: #64748b; margin-top: 10px;">Guest (Booking Only)</button>
+        </div>
+    </div>
+
     <header>
+        <div>
+            <span id="roleDisplay" style="font-size:0.7rem; font-weight:bold; color:var(--primary);"></span>
+            <button onclick="location.reload()" style="font-size: 0.6rem; cursor:pointer;">Logout</button>
+        </div>
         <div class="lang-btns">
             <button onclick="setLang('ar')">عربي</button>
             <button onclick="setLang('ku')">کوردی</button>
             <button onclick="setLang('en')">EN</button>
         </div>
-        <div style="font-size: 0.7rem; font-weight: bold;">2:00 PM - 8:00 PM</div>
         <div onclick="toggleTheme()" style="cursor:pointer; font-size: 1.1rem;">🌓</div>
     </header>
 
     <div class="grid" id="doctorsGrid"></div>
 
-    <div class="table-section">
-        <table>
-            <thead><tr id="tableHead"></tr></thead>
-            <tbody id="apptBody"></tbody>
-        </table>
+    <div id="adminArea" class="hidden">
+        <div class="search-wrapper">
+            <input type="text" id="searchInput" class="search-input" placeholder="Search..." onkeyup="filterTable()">
+        </div>
+        <div class="table-section">
+            <table>
+                <thead><tr id="tableHead"></tr></thead>
+                <tbody id="apptBody"></tbody>
+            </table>
+        </div>
     </div>
-
-    <footer> Developed by <span class="signature">@BahezKhalidAudl</span> </footer>
 
     <div id="modal">
         <div class="modal-box">
             <h4 id="mTitle" style="margin:0 0 10px 0; text-align:center;"></h4>
-            <input type="text" id="pName" placeholder="">
-            <input type="number" id="pAge" placeholder="">
+            <input type="text" id="pName">
+            <input type="number" id="pAge">
             <input type="datetime-local" id="pTime">
             <button class="btn-confirm" onclick="confirmBooking()" id="btnSave"></button>
-            <button onclick="closeModal()" style="background:none; border:none; color:#94a3b8; width:100%; margin-top:10px; cursor:pointer; font-size: 0.75rem;">إلغاء / Cancel</button>
+            <button onclick="closeModal()" style="background:none; border:none; color:#94a3b8; width:100%; margin-top:10px; cursor:pointer; font-size: 0.75rem;">Cancel</button>
         </div>
     </div>
 
     <script>
-        let lang = 'ar';
-        let selDoc = null;
+        let lang = 'ar', selDoc = null, currentUserRole = null;
         let db = JSON.parse(localStorage.getItem('clinic_final_v11')) || [];
 
         const ui = {
-            ar: {
-                cols: ["#", "المريض", "العمر", "الطبيب", "الوقت", "السعر", "X"],
-                btn: "حفظ الموعد", mTitle: "حجز موعد", namePlc: "اسم المريض", agePlc: "العمر",
-                errTime: "العيادة تفتح من 2:00 مساءً إلى 8:00 مساءً فقط!",
-                errDup: "هذا الطبيب محجوز في نفس الوقت واليوم!",
-                doctors: [
-                    { id: 1, name: "د. أحمد", spec: "قلبية", price: "15,000" },
-                    { id: 2, name: "د. سارة", spec: "أطفال", price: "10,000" },
-                    { id: 3, name: "د. خالد", spec: "أسنان", price: "15,000" },
-                    { id: 4, name: "د. منى", spec: "عيون", price: "12,000" },
-                    { id: 5, name: "د. عمر", spec: "أعصاب", price: "15,000" },
-                    { id: 6, name: "د. سۆزان", spec: "نسائية", price: "15,000" },
-                    { id: 7, name: "د. هێمن", spec: "عام / گشتی", price: "5,000" }
-                ]
-            },
-            ku: {
-                cols: ["#", "نەخۆش", "تەمەن", "پزیشک", "کات", "نرخ", "X"],
-                btn: "جێگیرکردن", mTitle: "حجز کردن", namePlc: "ناوی نەخۆش", agePlc: "تەمەن",
-                errTime: "تەنها لە ٢ی نیوەڕۆ بۆ ٨ی شەو کراوەیە!",
-                errDup: "ئەم پزیشکە لەم کات و بەروارەدا حجز کراوە!",
-                doctors: [
-                    { id: 1, name: "د. ئەحمەد", spec: "دڵ", price: "15,000" },
-                    { id: 2, name: "د. سارە", spec: "منداڵان", price: "10,000" },
-                    { id: 3, name: "د. خالید", spec: "ددان", price: "15,000" },
-                    { id: 4, name: "د. مونا", spec: "چاو", price: "12,000" },
-                    { id: 5, name: "د. عومەر", spec: "دەمار", price: "15,000" },
-                    { id: 6, name: "د. سۆزان", spec: "ژن و منداڵ", price: "15,000" },
-                    { id: 7, name: "د. هێمن", spec: "گشتی", price: "5,000" }
-                ]
-            },
-            en: {
-                cols: ["#", "Patient", "Age", "Doctor", "Time", "Price", "X"],
-                btn: "Confirm", mTitle: "New Booking", namePlc: "Patient Name", agePlc: "Age",
-                errTime: "Open 2:00 PM to 8:00 PM only!",
-                errDup: "This doctor is already booked at this time!",
-                doctors: [
-                    { id: 1, name: "Dr. Ahmed", spec: "Heart", price: "15,000" },
-                    { id: 2, name: "Dr. Sara", spec: "Kids", price: "10,000" },
-                    { id: 3, name: "Dr. Khalid", spec: "Dentist", price: "15,000" },
-                    { id: 4, name: "Dr. Mona", spec: "Eyes", price: "12,000" },
-                    { id: 5, name: "Dr. Omar", spec: "Nerves", price: "15,000" },
-                    { id: 6, name: "Dr. Suzan", spec: "Women's", price: "15,000" },
-                    { id: 7, name: "Dr. Hemin", spec: "General", price: "5,000" }
-                ]
-            }
+            ar: { cols: ["#", "المريض", "العمر", "الطبيب", "الوقت", "السعر", "X"], search: "بحث في المواعيد...", success: "تم الحجز!", loginErr: "كلمة المرور خاطئة!" },
+            ku: { cols: ["#", "نەخۆش", "تەمەن", "پزیشک", "کات", "نرخ", "X"], search: "گەڕان...", success: "حجز کرا!", loginErr: "پاسۆرد هەڵەیە!" },
+            en: { cols: ["#", "Patient", "Age", "Doctor", "Time", "Price", "X"], search: "Search...", success: "Booked!", loginErr: "Wrong Password!" }
         };
+
+        const docList = [
+            { id: 1, name: "د. أحمد", spec: "قلبية", price: "15,000" },
+            { id: 2, name: "د. سارة", spec: "أطفال", price: "10,000" },
+            { id: 3, name: "د. خالد", spec: "أسنان", price: "15,000" },
+            { id: 4, name: "د. منى", spec: "عيون", price: "12,000" },
+            { id: 5, name: "د. عمر", spec: "أعصاب", price: "15,000" },
+            { id: 6, name: "د. سۆزان", spec: "نسائية", price: "15,000" },
+            { id: 7, name: "د. هێمن", spec: "عام", price: "5,000" }
+        ];
+
+        // NEW: Password Protected Admin Login
+        function checkAdmin() {
+            const pass = prompt("Enter Admin Password / أدخل كلمة المرور:");
+            if (pass === "9898") {
+                login('admin');
+            } else {
+                alert(ui[lang].loginErr);
+            }
+        }
+
+        function login(role) {
+            currentUserRole = role;
+            document.getElementById('loginOverlay').style.display = 'none';
+            document.getElementById('roleDisplay').innerText = role.toUpperCase();
+            if(role === 'admin') document.getElementById('adminArea').classList.remove('hidden');
+            render();
+        }
 
         function setLang(l) { lang = l; render(); }
 
         function render() {
-            const d = ui[lang];
+            if(!currentUserRole) return;
             document.body.className = lang === 'en' ? 'ltr' : 'rtl';
-            document.getElementById('tableHead').innerHTML = d.cols.map(c => `<th>${c}</th>`).join('');
-            document.getElementById('btnSave').innerText = d.btn;
-            document.getElementById('mTitle').innerText = d.mTitle;
-            document.getElementById('pName').placeholder = d.namePlc;
-            document.getElementById('pAge').placeholder = d.agePlc;
-
-            const grid = document.getElementById('doctorsGrid');
-            grid.innerHTML = d.doctors.map(doc => `
+            document.getElementById('tableHead').innerHTML = ui[lang].cols.map(c => `<th>${c}</th>`).join('');
+            document.getElementById('searchInput').placeholder = ui[lang].search;
+            
+            document.getElementById('doctorsGrid').innerHTML = docList.map(doc => `
                 <div class="card" onclick="openModal(${doc.id})">
-                    <div><h3>${doc.name}</h3><p>${doc.spec}</p></div>
+                    <h3>${doc.name}</h3><p style="font-size:0.6rem; color:#94a3b8; margin:0;">${doc.spec}</p>
                     <div class="price-tag">${doc.price} IQD</div>
                 </div>
             `).join('');
             updateTable();
         }
 
-        function openModal(id) { selDoc = ui[lang].doctors.find(x => x.id === id); document.getElementById('modal').style.display = 'flex'; }
+        function filterTable() {
+            let input = document.getElementById("searchInput").value.toLowerCase();
+            let rows = document.querySelectorAll("#apptBody tr");
+            rows.forEach(row => {
+                row.style.display = row.innerText.toLowerCase().includes(input) ? "" : "none";
+            });
+        }
+
+        function openModal(id) { 
+            selDoc = docList.find(x => x.id === id); 
+            document.getElementById('mTitle').innerText = selDoc.name;
+            document.getElementById('modal').style.display = 'flex'; 
+        }
+        
         function closeModal() { document.getElementById('modal').style.display = 'none'; }
 
         function confirmBooking() {
-            const name = document.getElementById('pName').value;
-            const age = document.getElementById('pAge').value;
-            const timeVal = document.getElementById('pTime').value;
-            if(!name || !age || !timeVal) return;
-
-            const dt = new Date(timeVal);
-            if (dt.getHours() < 14 || dt.getHours() >= 20) return alert(ui[lang].errTime);
-
-            const options = { hour: 'numeric', minute: '2-digit', hour12: true };
-            const timeStr = dt.toLocaleTimeString('en-US', options);
-            const dateStr = dt.toLocaleDateString('en-US', {month:'short', day:'numeric', year:'numeric'});
-            const fullStamp = `${dateStr} | ${timeStr}`;
-
-            // فحص تكرار الموعد (نفس الطبيب + نفس الوقت واليوم)
-            const isDuplicate = db.some(a => a.doc === selDoc.name && a.time === fullStamp);
-            if(isDuplicate) return alert(ui[lang].errDup);
-
-            db.push({
-                id: Date.now(), tkt: db.length + 1, user: name, age: age,
-                doc: selDoc.name, price: selDoc.price, time: fullStamp
-            });
-
+            const name = document.getElementById('pName').value, age = document.getElementById('pAge').value, time = document.getElementById('pTime').value;
+            if(!name || !age || !time) return;
+            
+            db.push({ id: Date.now(), tkt: db.length + 1, user: name, age: age, doc: selDoc.name, price: selDoc.price, time: time });
             localStorage.setItem('clinic_final_v11', JSON.stringify(db));
-            document.getElementById('pName').value = ''; document.getElementById('pAge').value = '';
+            alert(ui[lang].success);
             closeModal(); updateTable();
         }
 
         function updateTable() {
+            if(currentUserRole !== 'admin') return;
             const body = document.getElementById('apptBody');
             body.innerHTML = db.map(a => `
                 <tr>
                     <td><span class="tkt">#${a.tkt}</span></td>
                     <td>${a.user}</td><td>${a.age}</td><td><strong>${a.doc}</strong></td>
                     <td>${a.time}</td><td>${a.price}</td>
-                    <td><button onclick="del(${a.id})" style="border:none; background:none; color:red; cursor:pointer;">X</button></td>
+                    <td><button onclick="del(${a.id})" style="color:red; border:none; background:none; cursor:pointer; font-weight:bold;">X</button></td>
                 </tr>
             `).join('');
         }
 
-        function del(id) { db = db.filter(x => x.id !== id); localStorage.setItem('clinic_final_v11', JSON.stringify(db)); updateTable(); }
-        function toggleTheme() { const b = document.body; b.getAttribute('data-theme') === 'dark' ? b.removeAttribute('data-theme') : b.setAttribute('data-theme', 'dark'); }
-        render();
+        function del(id) {
+            if(!confirm("Delete?")) return;
+            db = db.filter(x => x.id !== id);
+            localStorage.setItem('clinic_final_v11', JSON.stringify(db));
+            updateTable();
+        }
+
+        function toggleTheme() {
+            const b = document.body;
+            b.getAttribute('data-theme') === 'dark' ? b.removeAttribute('data-theme') : b.setAttribute('data-theme', 'dark');
+        }
     </script>
 </body>
 </html>
