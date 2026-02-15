@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ar">
+<html lang="ku">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,9 +9,11 @@
 
 body{
     margin:0;
-    font-family: 'Segoe UI', sans-serif;
-    background:#f3f6fa;
+    font-family:'Segoe UI',sans-serif;
+    background:#f2f5f9;
 }
+
+/* HEADER */
 
 header{
     text-align:center;
@@ -27,17 +29,21 @@ header h1{
     font-size:14px;
 }
 
+/* GRID - 3 PER ROW */
+
 .grid{
     display:grid;
-    grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+    grid-template-columns:repeat(3,1fr);
     gap:20px;
     padding:20px;
 }
 
+/* CARD STYLE */
+
 .card{
     background:white;
     border-radius:25px;
-    padding:30px;
+    padding:30px 20px;
     text-align:center;
     box-shadow:0 10px 25px rgba(0,0,0,0.05);
     cursor:pointer;
@@ -50,7 +56,7 @@ header h1{
 
 .card h2{
     margin:0;
-    font-size:22px;
+    font-size:20px;
 }
 
 .price{
@@ -72,9 +78,9 @@ header h1{
     right:0;
     background:white;
     box-shadow:0 -5px 20px rgba(0,0,0,0.1);
-    border-radius:20px 20px 0 0;
+    border-radius:25px 25px 0 0;
     padding:20px;
-    max-height:40vh;
+    max-height:45vh;
     overflow:auto;
 }
 
@@ -94,16 +100,20 @@ header h1{
     color:red;
     cursor:pointer;
     font-weight:bold;
+    margin-left:8px;
 }
 
 .total{
     margin-top:10px;
     font-weight:bold;
+    font-size:16px;
 }
+
+/* FOOTER */
 
 footer{
     text-align:center;
-    margin-top:100px;
+    margin-top:120px;
     padding:20px;
     color:#777;
 }
@@ -114,7 +124,7 @@ footer{
 
 <header>
 <h1>Kabab ChwarMshqi - کەباب چوار مشقی</h1>
-<div class="location">📍 کەرکوک، فلەی ئیخوان</div>
+<div class="location">📍 کەرکوک، فلکەی ئیخوان</div>
 </header>
 
 <div class="grid" id="menu"></div>
@@ -131,45 +141,64 @@ Developed by @BahezKhalidAudl
 
 <script>
 
+/* ===== ALL MENU ITEMS ===== */
+
 const menuData = [
 {name:"تکەی مریشک", price:2500},
 {name:"تکەی گۆشت", price:2500},
 {name:"جگەر", price:2500},
 {name:"کەباب", price:2500},
 {name:"کەباب مەحشی", price:2500},
-{name:"برنج و شلە بە گۆشت", price:6000},
+{name:"موقەبیلات (Small)", price:2500},
+{name:"موقەبیلات (Large)", price:5000},
+{name:"پێپسی", price:1000},
+{name:"کۆلا", price:1000},
+{name:"سپرایت", price:1000},
+{name:"دیو", price:1000},
+{name:"ڤانتا", price:1000},
+{name:"برنج و شلە ی سادە", price:3000},
+{name:"برنج و شلە بە مریشک", price:4500},
+{name:"برنج و شلە بە گۆشت", price:6000}
 ];
 
-const menuDiv = document.getElementById("menu");
-const orderList = document.getElementById("orderList");
-const totalPriceSpan = document.getElementById("totalPrice");
+const menuDiv=document.getElementById("menu");
+const orderList=document.getElementById("orderList");
+const totalPriceSpan=document.getElementById("totalPrice");
 
-let cart = {};
+let cart={};
+
+/* CREATE CARDS */
 
 menuData.forEach(item=>{
-    const div = document.createElement("div");
-    div.className="card";
-    div.innerHTML=`
+    const card=document.createElement("div");
+    card.className="card";
+    card.innerHTML=`
         <h2>${item.name}</h2>
         <div class="price">IQD ${item.price.toLocaleString()}</div>
     `;
-    div.onclick = ()=> addToCart(item.name,item.price);
-    menuDiv.appendChild(div);
+    card.onclick=()=>addToCart(item.name,item.price);
+    menuDiv.appendChild(card);
 });
+
+/* ADD TO CART */
 
 function addToCart(name,price){
     if(cart[name]){
         cart[name].quantity++;
     }else{
-        cart[name]={price:price, quantity:1};
+        cart[name]={price:price,quantity:1};
     }
     updateOrder();
 }
+
+/* REMOVE */
 
 function removeItem(name){
     delete cart[name];
     updateOrder();
 }
+
+/* UPDATE ORDER */
 
 function updateOrder(){
     orderList.innerHTML="";
@@ -177,14 +206,14 @@ function updateOrder(){
 
     for(let name in cart){
         let item=cart[name];
-        total += item.price*item.quantity;
+        total+=item.price*item.quantity;
 
         const div=document.createElement("div");
         div.className="order-item";
         div.innerHTML=`
             <span>${name} x${item.quantity}</span>
             <span>
-                ${ (item.price*item.quantity).toLocaleString() } IQD 
+                ${(item.price*item.quantity).toLocaleString()} IQD
                 <span class="remove" onclick="removeItem('${name}')">X</span>
             </span>
         `;
