@@ -6,7 +6,6 @@
 <title>Kabab ChwarMshqi</title>
 
 <style>
-
 body{
     margin:0;
     font-family:'Segoe UI',sans-serif;
@@ -14,14 +13,9 @@ body{
 }
 
 /* HEADER */
-
 header{
     text-align:center;
     padding:20px;
-}
-
-header h1{
-    margin:0;
 }
 
 .location{
@@ -29,48 +23,47 @@ header h1{
     font-size:14px;
 }
 
-/* GRID - 3 PER ROW */
+/* SECTION TITLE */
+.section-title{
+    font-weight:bold;
+    font-size:20px;
+    margin:30px 20px 10px;
+}
 
+/* GRID SMALL CARDS */
 .grid{
     display:grid;
     grid-template-columns:repeat(3,1fr);
-    gap:20px;
-    padding:20px;
+    gap:15px;
+    padding:0 20px;
 }
-
-/* CARD STYLE */
 
 .card{
     background:white;
-    border-radius:25px;
-    padding:30px 20px;
+    border-radius:18px;
+    padding:18px 10px;
     text-align:center;
-    box-shadow:0 10px 25px rgba(0,0,0,0.05);
+    box-shadow:0 6px 15px rgba(0,0,0,0.05);
     cursor:pointer;
-    transition:0.3s;
+    transition:0.2s;
+    font-size:14px;
 }
 
 .card:hover{
-    transform:translateY(-5px);
-}
-
-.card h2{
-    margin:0;
-    font-size:20px;
+    transform:scale(1.03);
 }
 
 .price{
-    margin-top:20px;
+    margin-top:10px;
     background:#dbeaf5;
-    padding:15px;
-    border-radius:15px;
+    padding:8px;
+    border-radius:12px;
     font-weight:bold;
-    font-size:18px;
     color:#1877b2;
+    font-size:13px;
 }
 
 /* ORDER PANEL */
-
 .order-panel{
     position:fixed;
     bottom:0;
@@ -79,58 +72,59 @@ header h1{
     background:white;
     box-shadow:0 -5px 20px rgba(0,0,0,0.1);
     border-radius:25px 25px 0 0;
-    padding:20px;
-    max-height:45vh;
+    padding:15px;
+    max-height:40vh;
     overflow:auto;
-}
-
-.order-title{
-    font-weight:bold;
-    margin-bottom:10px;
 }
 
 .order-item{
     display:flex;
     justify-content:space-between;
-    margin-bottom:8px;
-    font-size:14px;
+    margin-bottom:6px;
+    font-size:13px;
 }
 
 .remove{
     color:red;
     cursor:pointer;
-    font-weight:bold;
     margin-left:8px;
 }
 
 .total{
     margin-top:10px;
     font-weight:bold;
-    font-size:16px;
 }
 
 /* FOOTER */
-
 footer{
     text-align:center;
-    margin-top:120px;
+    margin-top:150px;
     padding:20px;
     color:#777;
 }
-
 </style>
 </head>
 <body>
 
 <header>
-<h1>Kabab ChwarMshqi - کەباب چوار مشقی</h1>
-<div class="location">📍 کەرکوک، فلکەی ئیخوان</div>
+<h2>Kabab ChwarMshqi - کەباب چوار مشقی</h2>
+<div class="location">📍 کەرکوک، فلەی ئیخوان</div>
 </header>
 
-<div class="grid" id="menu"></div>
+<!-- FOOD SECTION -->
+<div class="section-title">🍽 برژاو و خواردنەکان</div>
+<div class="grid" id="foodMenu"></div>
 
+<!-- DRINK SECTION -->
+<div class="section-title">🥤 خواردنەوەکان</div>
+<div class="grid" id="drinkMenu"></div>
+
+<!-- APPETIZERS -->
+<div class="section-title">🥗 موقەبیلات</div>
+<div class="grid" id="appMenu"></div>
+
+<!-- ORDER PANEL -->
 <div class="order-panel">
-<div class="order-title">🛒 Your Order</div>
 <div id="orderList"></div>
 <div class="total">Total: <span id="totalPrice">0</span> IQD</div>
 </div>
@@ -141,46 +135,59 @@ Developed by @BahezKhalidAudl
 
 <script>
 
-/* ===== ALL MENU ITEMS ===== */
+/* DATA */
 
-const menuData = [
+const foodItems = [
 {name:"تکەی مریشک", price:2500},
 {name:"تکەی گۆشت", price:2500},
 {name:"جگەر", price:2500},
 {name:"کەباب", price:2500},
 {name:"کەباب مەحشی", price:2500},
-{name:"موقەبیلات (Small)", price:2500},
-{name:"موقەبیلات (Large)", price:5000},
-{name:"پێپسی", price:1000},
-{name:"کۆلا", price:1000},
-{name:"سپرایت", price:1000},
-{name:"دیو", price:1000},
-{name:"ڤانتا", price:1000},
 {name:"برنج و شلە ی سادە", price:3000},
 {name:"برنج و شلە بە مریشک", price:4500},
 {name:"برنج و شلە بە گۆشت", price:6000}
 ];
 
-const menuDiv=document.getElementById("menu");
+const drinks = [
+{name:"پێپسی", price:500},
+{name:"کۆلا", price:500},
+{name:"سپرایت", price:500},
+{name:"دیو", price:500},
+{name:"ڤانتا", price:500}
+];
+
+const appetizers = [
+{name:"موقەبیلات (Small)", price:2500},
+{name:"موقەبیلات (Large)", price:5000}
+];
+
+const foodMenu=document.getElementById("foodMenu");
+const drinkMenu=document.getElementById("drinkMenu");
+const appMenu=document.getElementById("appMenu");
 const orderList=document.getElementById("orderList");
 const totalPriceSpan=document.getElementById("totalPrice");
 
 let cart={};
 
 /* CREATE CARDS */
+function createMenu(items,container){
+    items.forEach(item=>{
+        const card=document.createElement("div");
+        card.className="card";
+        card.innerHTML=`
+            <div>${item.name}</div>
+            <div class="price">${item.price.toLocaleString()} IQD</div>
+        `;
+        card.onclick=()=>addToCart(item.name,item.price);
+        container.appendChild(card);
+    });
+}
 
-menuData.forEach(item=>{
-    const card=document.createElement("div");
-    card.className="card";
-    card.innerHTML=`
-        <h2>${item.name}</h2>
-        <div class="price">IQD ${item.price.toLocaleString()}</div>
-    `;
-    card.onclick=()=>addToCart(item.name,item.price);
-    menuDiv.appendChild(card);
-});
+createMenu(foodItems,foodMenu);
+createMenu(drinks,drinkMenu);
+createMenu(appetizers,appMenu);
 
-/* ADD TO CART */
+/* CART FUNCTIONS */
 
 function addToCart(name,price){
     if(cart[name]){
@@ -191,14 +198,10 @@ function addToCart(name,price){
     updateOrder();
 }
 
-/* REMOVE */
-
 function removeItem(name){
     delete cart[name];
     updateOrder();
 }
-
-/* UPDATE ORDER */
 
 function updateOrder(){
     orderList.innerHTML="";
