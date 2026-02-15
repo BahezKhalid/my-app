@@ -1,205 +1,237 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl">
+<html lang="ku">
 <head>
-    <meta charset="UTF-8">
-    <title>Clinic Offline System</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <style>
-        :root { --primary: #0284c7; --bg: #f8fafc; --card: #ffffff; --text: #1e293b; --border: #cbd5e1; }
-        [data-theme='dark'] { --bg: #0f172a; --card: #1e293b; --text: #f8fafc; --border: #334155; }
-        * { box-sizing: border-box; font-family: sans-serif; }
-        body { background: var(--bg); color: var(--text); margin: 0; padding: 15px; }
-        
-        header { display: flex; justify-content: space-between; align-items: center; background: var(--card); padding: 10px; border-radius: 12px; border: 1px solid var(--border); margin-bottom: 20px; }
-        .btn { cursor: pointer; padding: 8px 12px; border-radius: 6px; border: 1px solid var(--border); background: var(--card); color: var(--text); font-weight: bold; font-size: 0.8rem; }
-        .btn-primary { background: var(--primary); color: white; border: none; }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kabab ChwarMshqi</title>
 
-        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); gap: 10px; }
-        .card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 15px 10px; text-align: center; cursor: pointer; }
-        .card:hover { border-color: var(--primary); }
-        .price { color: var(--primary); font-weight: bold; font-size: 0.9rem; margin-top: 10px; }
+<style>
+body{
+    margin:0;
+    font-family: 'Segoe UI', sans-serif;
+    background:#111;
+    color:white;
+}
 
-        #adminArea { margin-top: 20px; }
-        .table-container { background: var(--card); border: 1px solid var(--border); border-radius: 12px; overflow-x: auto; margin-top: 10px; }
-        table { width: 100%; border-collapse: collapse; font-size: 0.85rem; min-width: 500px; }
-        th, td { padding: 12px; text-align: center; border-bottom: 1px solid var(--border); }
-        th { background: rgba(0,0,0,0.05); }
+header{
+    text-align:center;
+    padding:20px;
+    background:#1e1e1e;
+}
 
-        .overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.7); display: none; align-items: center; justify-content: center; z-index: 1000; padding: 10px; }
-        .modal { background: var(--card); padding: 25px; border-radius: 15px; width: 100%; max-width: 350px; }
-        input { width: 100%; padding: 12px; margin: 10px 0; border: 1px solid var(--border); border-radius: 8px; background: var(--bg); color: var(--text); }
+header h1{
+    color:#ffcc00;
+    margin:0;
+}
 
-        .receipt { background: white; color: black; padding: 20px; border: 2px dashed #000; text-align: center; }
-        .hidden { display: none !important; }
+.location{
+    color:#aaa;
+    font-size:14px;
+}
 
-        @media print {
-            body * { visibility: hidden; }
-            #printSection, #printSection * { visibility: visible; }
-            #printSection { position: absolute; left: 0; top: 0; width: 100%; }
-        }
-    </style>
+.container{
+    display:flex;
+    flex-wrap:wrap;
+    padding:20px;
+    gap:20px;
+}
+
+.menu{
+    flex:1;
+}
+
+.menu-item{
+    background:#1e1e1e;
+    padding:12px;
+    margin-bottom:10px;
+    border-radius:10px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+}
+
+button{
+    background:#ffcc00;
+    border:none;
+    padding:6px 10px;
+    border-radius:6px;
+    cursor:pointer;
+    font-weight:bold;
+}
+
+.cart{
+    flex:1.2;
+    background:#1e1e1e;
+    padding:15px;
+    border-radius:12px;
+}
+
+.cart h2{
+    color:#ffcc00;
+}
+
+.grid{
+    display:grid;
+    grid-template-columns:repeat(3, 1fr);
+    gap:10px;
+}
+
+.cart-box{
+    background:#2a2a2a;
+    padding:10px;
+    border-radius:10px;
+    font-size:13px;
+    position:relative;
+    min-height:80px;
+}
+
+.cart-box .remove{
+    position:absolute;
+    top:5px;
+    right:5px;
+    background:red;
+    color:white;
+    border:none;
+    border-radius:50%;
+    width:20px;
+    height:20px;
+    font-size:12px;
+    cursor:pointer;
+}
+
+.section-title{
+    margin-top:15px;
+    margin-bottom:8px;
+    font-weight:bold;
+    color:#00d9ff;
+}
+
+.total{
+    margin-top:15px;
+    font-weight:bold;
+    font-size:16px;
+}
+
+footer{
+    text-align:center;
+    padding:15px;
+    margin-top:20px;
+    background:#1e1e1e;
+    color:#aaa;
+}
+</style>
 </head>
+
 <body>
 
-    <div id="loginOverlay" class="overlay" style="display: flex;">
-        <div class="modal">
-            <h2 style="text-align: center;">Clinic System</h2>
-            <button class="btn btn-primary" style="width: 100%; margin-bottom: 10px;" onclick="checkAdmin()">Admin (9898)</button>
-            <button class="btn" style="width: 100%;" onclick="login('guest')">Guest Booking</button>
-        </div>
-    </div>
+<header>
+<h1>Kabab ChwarMshqi - کەباب چوار مشقی</h1>
+<div class="location">📍 کەرکوک، فلەی ئیخوان</div>
+</header>
 
-    <header>
-        <div>
-            <span id="roleTag" style="font-weight: bold; color: var(--primary);"></span>
-            <button class="btn" onclick="logout()" style="margin-right: 10px;">Logout</button>
-        </div>
-        <div id="langGroup">
-            <button class="btn" onclick="setLang('ar')">AR</button>
-            <button class="btn" onclick="setLang('ku')">KU</button>
-            <button class="btn" onclick="setLang('en')">EN</button>
-        </div>
-    </header>
+<div class="container">
 
-    <div class="grid" id="docGrid"></div>
+<div class="menu" id="menu"></div>
 
-    <div id="adminArea" class="hidden">
-        <div style="display: flex; gap: 10px; margin-bottom: 10px;">
-            <input type="text" id="search" onkeyup="renderTable()" placeholder="Search..." style="margin:0;">
-            <button class="btn" onclick="exportData()">Backup Data</button>
-        </div>
-        <div class="table-container">
-            <table>
-                <thead><tr id="thr"></tr></thead>
-                <tbody id="tbt"></tbody>
-            </table>
-        </div>
-    </div>
+<div class="cart">
+<h2>🛒 Order</h2>
 
-    <div id="bookingModal" class="overlay">
-        <div class="modal">
-            <h3 id="mt" style="margin-top:0;"></h3>
-            <input type="text" id="pName" placeholder="Name">
-            <input type="number" id="pAge" placeholder="Age">
-            <input type="time" id="pTime">
-            <button class="btn btn-primary" style="width: 100%;" onclick="saveBooking()">Confirm</button>
-            <button class="btn" style="width: 100%; margin-top: 10px;" onclick="closeModals()">Cancel</button>
-        </div>
-    </div>
+<div class="section-title">🍢 Food</div>
+<div class="grid" id="foodCart"></div>
 
-    <div id="printModal" class="overlay">
-        <div class="modal">
-            <div id="printSection" class="receipt">
-                <h2 id="rpTitle">Clinic Ticket</h2>
-                <hr>
-                <p id="rpName"></p>
-                <p id="rpDoc"></p>
-                <p id="rpTime"></p>
-                <p id="rpPrice"></p>
-            </div>
-            <button class="btn btn-primary" style="width: 100%; margin-top: 10px;" onclick="window.print()">Print Now</button>
-            <button class="btn" style="width: 100%; margin-top: 10px;" onclick="closeModals()">Close</button>
-        </div>
-    </div>
+<div class="section-title">🥤 Drinks</div>
+<div class="grid" id="drinkCart"></div>
 
-    <script>
-        let lang = 'ar', role = null, selDoc = null;
-        let db = JSON.parse(localStorage.getItem('clinic_db')) || [];
+<div class="total">Total: <span id="totalPrice">0</span> IQD</div>
 
-        const ui = {
-            ar: { head: ["#", "المريض", "العمر", "الطبيب", "الوقت", "السعر", "X"], roleA: "المسؤول", roleG: "حجز زائر", docs: [{n:"د. أحمد", s:"قلبية", p:"15,000"}, {n:"د. سارة", s:"أطفال", p:"10,000"}, {n:"د. خالد", s:"أسنان", p:"15,000"}] },
-            ku: { head: ["#", "نەخۆش", "تەمەن", "پزیشک", "کات", "نرخ", "X"], roleA: "بەڕێوبەر", roleG: "حجزکردن", docs: [{n:"د. ئەحمەد", s:"دڵ", p:"15,000"}, {n:"د. سارە", s:"منداڵان", p:"10,000"}, {n:"د. خالید", s:"ددان", p:"15,000"}] },
-            en: { head: ["#", "Patient", "Age", "Doctor", "Time", "Price", "X"], roleA: "ADMIN", roleG: "GUEST", docs: [{n:"Dr. Ahmed", s:"Heart", p:"15,000"}, {n:"Dr. Sara", s:"Kids", p:"10,000"}, {n:"Dr. Khalid", s:"Dentist", p:"15,000"}] }
-        };
+</div>
 
-        function checkAdmin() {
-            if(prompt("Password:") === "9898") login('admin');
+</div>
+
+<footer>
+Developed by @BahezKhalidAudl
+</footer>
+
+<script>
+
+const menuData = [
+{name:"تکەی مریشک", price:2500, type:"food"},
+{name:"تکەی گۆشت", price:2500, type:"food"},
+{name:"جگەر", price:2500, type:"food"},
+{name:"کەباب", price:2500, type:"food"},
+{name:"کەباب مەحشی", price:2500, type:"food"},
+{name:"موقەبیلات (Small)", price:2500, type:"food"},
+{name:"موقەبیلات (Large)", price:5000, type:"food"},
+{name:"برنج و شلە ی سادە", price:3000, type:"food"},
+{name:"برنج و شلە بە مریشک", price:4500, type:"food"},
+{name:"برنج و شلە بە گۆشت", price:6000, type:"food"},
+{name:"پێپسی", price:1000, type:"drink"},
+{name:"کۆلا", price:1000, type:"drink"},
+{name:"سپرایت", price:1000, type:"drink"},
+{name:"دیو", price:1000, type:"drink"},
+{name:"ڤانتا", price:1000, type:"drink"},
+];
+
+const menuDiv = document.getElementById("menu");
+const foodCart = document.getElementById("foodCart");
+const drinkCart = document.getElementById("drinkCart");
+const totalPriceSpan = document.getElementById("totalPrice");
+
+let cart = {};
+
+menuData.forEach(item=>{
+    const div=document.createElement("div");
+    div.className="menu-item";
+    div.innerHTML=`
+        <span>${item.name} - ${item.price.toLocaleString()} IQD</span>
+        <button onclick="addToCart('${item.name}', ${item.price}, '${item.type}')">Add</button>
+    `;
+    menuDiv.appendChild(div);
+});
+
+function addToCart(name, price, type){
+    if(cart[name]){
+        cart[name].quantity++;
+    }else{
+        cart[name]={price, quantity:1, type};
+    }
+    updateCart();
+}
+
+function removeFromCart(name){
+    delete cart[name];
+    updateCart();
+}
+
+function updateCart(){
+    foodCart.innerHTML="";
+    drinkCart.innerHTML="";
+    let total=0;
+
+    for(let name in cart){
+        let item=cart[name];
+        total+=item.price*item.quantity;
+
+        const box=document.createElement("div");
+        box.className="cart-box";
+        box.innerHTML=`
+            <button class="remove" onclick="removeFromCart('${name}')">X</button>
+            <div>${name}</div>
+            <div>Qty: ${item.quantity}</div>
+            <div>${(item.price*item.quantity).toLocaleString()} IQD</div>
+        `;
+
+        if(item.type==="food"){
+            foodCart.appendChild(box);
+        }else{
+            drinkCart.appendChild(box);
         }
+    }
 
-        function login(r) {
-            role = r;
-            document.getElementById('loginOverlay').style.display = 'none';
-            render();
-        }
+    totalPriceSpan.textContent=total.toLocaleString();
+}
 
-        function logout() { location.reload(); }
+</script>
 
-        function render() {
-            const d = ui[lang];
-            document.body.dir = lang === 'en' ? 'ltr' : 'rtl';
-            document.getElementById('roleTag').innerText = role === 'admin' ? d.roleA : d.roleG;
-            
-            // Show/Hide Admin
-            if(role === 'admin') document.getElementById('adminArea').classList.remove('hidden');
-            
-            // Render Doctors
-            document.getElementById('docGrid').innerHTML = d.docs.map(doc => `
-                <div class="card" onclick="openBooking('${doc.n}', '${doc.p}')">
-                    <b>${doc.n}</b><br><small>${doc.s}</small>
-                    <div class="price">${doc.p} IQD</div>
-                </div>
-            `).join('');
-            
-            renderTable();
-        }
-
-        function openBooking(n, p) {
-            selDoc = {name: n, price: p};
-            document.getElementById('mt').innerText = n;
-            document.getElementById('bookingModal').style.display = 'flex';
-        }
-
-        function saveBooking() {
-            const name = document.getElementById('pName').value;
-            const time = document.getElementById('pTime').value;
-            if(!name || !time) return alert("Fill data!");
-
-            const entry = { id: Date.now(), name, age: document.getElementById('pAge').value, doc: selDoc.name, price: selDoc.price, time };
-            db.push(entry);
-            localStorage.setItem('clinic_db', JSON.stringify(db));
-
-            // Setup Receipt
-            document.getElementById('rpName').innerText = "Patient: " + name;
-            document.getElementById('rpDoc').innerText = "Doctor: " + selDoc.name;
-            document.getElementById('rpTime').innerText = "Time: " + time;
-            document.getElementById('rpPrice').innerText = "Price: " + selDoc.price;
-
-            closeModals();
-            document.getElementById('printModal').style.display = 'flex';
-            renderTable();
-        }
-
-        function renderTable() {
-            if(role !== 'admin') return;
-            const d = ui[lang];
-            const s = document.getElementById('search').value.toLowerCase();
-            document.getElementById('thr').innerHTML = d.head.map(h => `<th>${h}</th>`).join('');
-            
-            document.getElementById('tbt').innerHTML = db.filter(x => x.name.toLowerCase().includes(s) || x.doc.toLowerCase().includes(s))
-            .map((x, i) => `
-                <tr>
-                    <td>${i+1}</td><td>${x.name}</td><td>${x.age}</td><td>${x.doc}</td><td>${x.time}</td><td>${x.price}</td>
-                    <td><button onclick="del(${x.id})">X</button></td>
-                </tr>
-            `).join('');
-        }
-
-        function del(id) {
-            db = db.filter(x => x.id !== id);
-            localStorage.setItem('clinic_db', JSON.stringify(db));
-            renderTable();
-        }
-
-        function exportData() {
-            const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(db));
-            const dlAnchorElem = document.createElement('a');
-            dlAnchorElem.setAttribute("href", dataStr);
-            dlAnchorElem.setAttribute("download", "clinic_backup.json");
-            dlAnchorElem.click();
-        }
-
-        function setLang(l) { lang = l; render(); }
-        function closeModals() { document.querySelectorAll('.overlay').forEach(o => { if(o.id !== 'loginOverlay') o.style.display = 'none'; }); }
-    </script>
 </body>
 </html>
